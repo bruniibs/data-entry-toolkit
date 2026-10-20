@@ -2,14 +2,17 @@ import pandas as pd
 
 df = pd.read_csv("data/clients.csv")
 
-# exibir primeiras linhas
-print("=== Primeiras linhas ===")
-print(df.head())
+print("=== Dados Originais ===")
+print(df)
 
-# Exibir quantidade de registros
-print("\n=== Total de registros ===")
-print(f"Total de registros: {df.shape[0]}")
+# padronizar nomes
+df['nome'] = df["nome"].str.strip().str.title()
 
-# Exibir nomes dass colunas
-print("\n=== Colunas ===")
-print(f"Total de colunas: {df.shape[1]}")
+# padronizar emails
+df["email"] = df["email"].str.strip().str.lower()
+
+# padronizar cidades
+df["cidade"] = df["cidade"].str.strip().str.title()
+
+print("\n=== DADOS LIMPOS ===")
+print(df)
