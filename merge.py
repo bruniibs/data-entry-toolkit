@@ -26,7 +26,7 @@ df_final, quantidade = remover_duplicatas(df_limpo)
 
 # Relatorio
 print("\n === RELATORIO FINAL ===")
-print(f"\Arquivos processados: {len(arquivos)}")
+print(f"\nArquivos processados: {len(arquivos)}")
 print(f"\nRegistros unificados: {df_unificado.shape[0]}")
 print(f"\nDuplicatas removidas: {quantidade}")
 print(f"\nRegistros finais: {df_final.shape[0]}")

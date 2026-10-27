@@ -11,7 +11,7 @@ def exportar_csv(df, pasta="output"):
         if contador == 0:
             nome = "clientes_tratados.csv"
         else:
-            nome = f"clientes_tratados{contador:03d}.csv"
+            nome = f"clientes_tratados_{contador:03d}.csv"
         
         caminho = pasta_saida / nome
         
@@ -33,3 +33,9 @@ def exportar_csv(df, pasta="output"):
             )
             
             print("Validação do csv concluida!")
+            
+            return caminho
+        
+        except FileExistsError:
+            contador += 1
+            continue
