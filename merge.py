@@ -18,7 +18,9 @@ for arquivo in arquivos:
 
 # Unificar os DataFrames
 df_unificado = pd.concat(dataframes, ignore_index=True)
+# limpar dupes
 df_limpo = limpar_dados(df_unificado)
+
 df_final, quantidade = remover_duplicatas(df_limpo)
 
 # Relatorio
@@ -31,6 +33,22 @@ print(f"\nRegistros finais: {df_final.shape[0]}")
 # mostrar resultado
 print("\n === DADOS UNIFICADOS ===")
 print(df_final)
+
+# testes de integracao
+assert df_unificado.shape[0] == sum(
+    df.shape[0] for df in dataframes
+)
+
+assert df_final.shape[0] == df_unificado.shape[0] - quantidade
+
+assert not df_final.duplicated().any()
+
+assert (
+    df_final["email"]
+    == df_final["email"].str.strip().str.lower()
+).all()
+
+print("\nTestes de integracao passaram!")
 
 # EXPORTACAO DOS DADOS
 pasta_saida = Path("output")
