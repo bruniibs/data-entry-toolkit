@@ -1,5 +1,7 @@
 import pandas as pd
 from cleaning import limpar_dados
+from duplicates import remover_duplicatas
+from pathlib import Path
 
 # ler os dois arquivos csv
 arquivos = [
@@ -17,12 +19,27 @@ for arquivo in arquivos:
 # Unificar os DataFrames
 df_unificado = pd.concat(dataframes, ignore_index=True)
 df_limpo = limpar_dados(df_unificado)
+df_final, quantidade = remover_duplicatas(df_limpo)
 
 # Relatorio
-print("\n === RELATORIO DE UNIFICACAO ===")
-print(f"\nTotal de arquivos: {len(arquivos)}")
-print(f"\nTotal de registros unificados: {df_unificado.shape[0]}")
+print("\n === RELATORIO FINAL ===")
+print(f"\Arquivos processados: {len(arquivos)}")
+print(f"\nRegistros unificados: {df_unificado.shape[0]}")
+print(f"\nDuplicatas removidas: {quantidade}")
+print(f"\nRegistros finais: {df_final.shape[0]}")
 
 # mostrar resultado
 print("\n === DADOS UNIFICADOS ===")
-print(df_unificado)
+print(df_final)
+
+
+# EXPORTACAO DOS DADOS
+pasta_saida = Path("output")
+pasta_saida.mkdir(exist_ok=True)
+
+arquivo_saida = pasta_saida / "clientes_tratados.csv"
+
+with arquivo_saida.open("x", encoding="utf-8-sig", newline="") as arquivo:
+    df_final.to_csv(arquivo, index=False)
+
+print(f"Arquivo salvo em: {arquivo_saida}")
