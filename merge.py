@@ -2,6 +2,7 @@ import pandas as pd
 from cleaning import limpar_dados
 from duplicates import remover_duplicatas
 from pathlib import Path
+from export import exportar_csv
 
 # ler os dois arquivos csv
 arquivos = [
@@ -51,31 +52,6 @@ assert (
 print("\nTestes de integracao passaram!")
 
 # EXPORTACAO DOS DADOS
-pasta_saida = Path("output")
-pasta_saida.mkdir(exist_ok=True)
+caminho = exportar_csv(df_final)
 
-arquivo_saida = pasta_saida / "clientes_tratados.csv"
-
-try:
-    with arquivo_saida.open("x", encoding="utf-8-sig", newline="") as arquivo:
-        df_final.to_csv(arquivo, index=False)
-        
-    print(f"Arquivo salvo em: {arquivo_saida}")
-    
-    # Reabrir o CSV exportado
-    df_verificacao = pd.read_csv(
-        arquivo_saida,
-        encoding="utf-8-sig"
-    )
-    
-    # Comparar com os dados que queriamos salvar
-    pd.testing.assert_frame_equal(
-        df_final.reset_index(drop=True),
-        df_verificacao,
-        check_dtype=False
-    )
-    
-    print("Validacao da exportacao passou!")
-
-except FileExistsError:
-    print("O arquivo ja existe! Nenhum arquivo foi sobreescrito")
+print(f"\nArquivo criado: {caminho}")
