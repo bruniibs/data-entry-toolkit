@@ -56,7 +56,26 @@ pasta_saida.mkdir(exist_ok=True)
 
 arquivo_saida = pasta_saida / "clientes_tratados.csv"
 
-with arquivo_saida.open("x", encoding="utf-8-sig", newline="") as arquivo:
-    df_final.to_csv(arquivo, index=False)
+try:
+    with arquivo_saida.open("x", encoding="utf-8-sig", newline="") as arquivo:
+        df_final.to_csv(arquivo, index=False)
+        
+    print(f"Arquivo salvo em: {arquivo_saida}")
+    
+    # Reabrir o CSV exportado
+    df_verificacao = pd.read_csv(
+        arquivo_saida,
+        encoding="utf-8-sig"
+    )
+    
+    # Comparar com os dados que queriamos salvar
+    pd.testing.assert_frame_equal(
+        df_final.reset_index(drop=True),
+        df_verificacao,
+        check_dtype=False
+    )
+    
+    print("Validacao da exportacao passou!")
 
-print(f"Arquivo salvo em: {arquivo_saida}")
+except FileExistsError:
+    print("O arquivo ja existe! Nenhum arquivo foi sobreescrito")
