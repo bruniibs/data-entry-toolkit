@@ -32,7 +32,6 @@ print(f"\nRegistros finais: {df_final.shape[0]}")
 print("\n === DADOS UNIFICADOS ===")
 print(df_final)
 
-
 # EXPORTACAO DOS DADOS
 pasta_saida = Path("output")
 pasta_saida.mkdir(exist_ok=True)
