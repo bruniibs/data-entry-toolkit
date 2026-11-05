@@ -1,5 +1,9 @@
 import pandas as pd
-from cleaning import limpar_dados
+from cleaning import (
+    limpar_dados,
+    normalizar_ausentes,
+    relatorio_ausentes
+)
 from duplicates import remover_duplicatas
 from pathlib import Path
 from export import exportar_csv
@@ -19,10 +23,18 @@ for arquivo in arquivos:
 
 # Unificar os DataFrames
 df_unificado = pd.concat(dataframes, ignore_index=True)
+
 # limpar dupes
 df_limpo = limpar_dados(df_unificado)
 
-df_final, quantidade = remover_duplicatas(df_limpo)
+# Normalizar valores vazios
+df_normalizado = normalizar_ausentes(df_limpo)
+
+# Gerar relatorio antes de remover duplicatas
+relatorio = relatorio_ausentes(df_normalizado)
+
+# Remover duplicatas
+df_final, quantidade = remover_duplicatas(df_normalizado)
 
 # Relatorio
 print("\n === RELATORIO FINAL ===")
@@ -35,6 +47,11 @@ print(f"\nRegistros finais: {df_final.shape[0]}")
 print("\n === DADOS UNIFICADOS ===")
 print(df_final)
 
+print("\n=== RELATÓRIO DE VALORES AUSENTES ===")
+
+for coluna, quantidade_ausente in relatorio.items():
+    print(f"{coluna}: {quantidade_ausente}")
+
 # testes de integracao
 assert df_unificado.shape[0] == sum(
     df.shape[0] for df in dataframes
@@ -44,9 +61,11 @@ assert df_final.shape[0] == df_unificado.shape[0] - quantidade
 
 assert not df_final.duplicated().any()
 
+emails_validos = df_final["email"].dropna()
+
 assert (
-    df_final["email"]
-    == df_final["email"].str.strip().str.lower()
+    emails_validos
+    == emails_validos.str.strip().str.lower()
 ).all()
 
 print("\nTestes de integracao passaram!")

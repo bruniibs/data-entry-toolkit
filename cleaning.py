@@ -1,3 +1,4 @@
+import pandas as pd
 
 def limpar_dados(df):
     df = df.copy()
@@ -18,3 +19,25 @@ def limpar_dados(df):
     df["cidade"] = df["cidade"].str.strip().str.title()
     
     return df
+
+def normalizar_ausentes(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Converte strings vazias ou contendo apenas espacos em valores ausentes (pd.NA)
+    """
+
+    df_normalizado = df.copy()
+
+    df_normalizado = df_normalizado.replace(
+        r"^\s*$",
+        pd.NA,
+        regex=True
+    )
+
+    return df_normalizado
+
+
+def relatorio_ausentes(df: pd.DataFrame) -> pd.Series:
+    """
+    Retorna a quantidade de valores ausentes em cada coluna data frame
+    """
+    return df.isna().sum()
