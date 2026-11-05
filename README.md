@@ -29,7 +29,9 @@ The toolkit is being developed with modular, reusable data-processing functions 
 | **CSV merging** | Combines multiple CSV files into a single dataset. |
 | **Processing summary** | Displays record counts before and after cleaning. |
 | **Integration checks** | Uses assertions to verify row counts, duplicate removal, and email normalization. |
-| **Safe CSV export** | Saves a cleaned CSV to `output/` without overwriting an existing output file, then reads it back to validate the result. |
+| **Safe CSV export** | Preserves existing exports by creating numbered filenames, then reads the new CSV back to validate its contents. |
+| **Missing value normalization** | Converts empty strings and whitespace-only fields into missing values. |
+| **Missing value report** | Reports the number of missing values in each column before duplicate removal. |
 
 > **Project status:** Work in progress. The current scripts use example CSV paths and a dataset with `nome`, `email`, and `cidade` columns. A general-purpose command-line interface is not yet available.
 
@@ -42,6 +44,10 @@ data-entry-toolkit/
 ├── main.py            # Initial single-file cleaning example
 ├── merge.py           # Merge, clean, validate, and export CSV data
 ├── requirements.txt   # Python dependencies
+├── .gitignore
+└── README.md
+├── requirements.txt   # Python dependencies
+├── tests/            # Automated tests for cleaning, duplicates, missing values, and export
 ├── .gitignore
 └── README.md
 ```
@@ -115,7 +121,8 @@ The pipeline reads both files, merges and standardizes their records, removes du
 output/clientes_tratados.csv
 ```
 
-**Important:** If that output file already exists, the script preserves it rather than overwriting it. Rename or move the previous output before running the export again.
+If the output file already exists, the toolkit creates a numbered file, such as
+`clientes_tratados_001.csv`, preserving previous exports.
 
 To try the original single-file example, create `data/clients.csv` and run `python main.py`.
 
@@ -148,6 +155,23 @@ The merging pipeline includes checks for:
 
 The current export uses exclusive file creation (`x` mode), preventing accidental overwrites of an existing output CSV. This is a useful safeguard, but not a substitute for backups or full production-grade validation.
 
+## 🧪 Running automated tests
+
+With your virtual environment activated, install pytest if needed:
+
+```bash
+python -m pip install pytest
+```
+
+Run the test suite from the project root:
+
+```bash
+python -m pytest -q
+```
+
+The tests cover data standardization, required columns, duplicate removal,
+missing value normalization, missing value reports, and CSV export.
+
 ## 🛠️ Built with
 
 - **Python** — processing logic and automation.
@@ -162,8 +186,11 @@ The current export uses exclusive file creation (`x` mode), preventing accidenta
 - [x] Add basic integration assertions
 - [x] Export CSV without overwriting existing output
 - [x] Validate exported CSV contents
-- [ ] Add automated tests and reusable test datasets
-- [ ] Handle invalid inputs and missing columns gracefully
+- [x] Add automated tests for cleaning, duplicates, missing values, and export
+- [x] Validate required columns before cleaning
+- [x] Normalize missing values and report counts by column
+- [ ] Add reusable test datasets
+- [ ] Expand validation for invalid inputs
 - [ ] Support configurable file paths and column mappings
 - [ ] Build a user-friendly command-line interface
 - [ ] Expand support for Excel files (`.xlsx`)
