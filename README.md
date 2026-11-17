@@ -41,13 +41,12 @@ The toolkit is being developed with modular, reusable data-processing functions 
 data-entry-toolkit/
 ├── cleaning.py        # Standardize names, emails, and cities
 ├── duplicates.py      # Remove duplicate records
+├── export.py          # Export and validate CSV output
 ├── main.py            # Initial single-file cleaning example
 ├── merge.py           # Merge, clean, validate, and export CSV data
 ├── requirements.txt   # Python dependencies
-├── .gitignore
-└── README.md
-├── requirements.txt   # Python dependencies
 ├── tests/            # Automated tests for cleaning, duplicates, missing values, and export
+│   └── fixtures/     # Synthetic CSV inputs for merge.py
 ├── .gitignore
 └── README.md
 ```
@@ -172,6 +171,12 @@ python -m pytest -q
 The tests cover data standardization, required columns, duplicate removal,
 missing value normalization, missing value reports, and CSV export.
 
+To exercise `merge.py` with reusable sample data, copy `clients_01.csv` and
+`clients_02.csv` from `tests/fixtures/` into an empty `data/` directory, then run
+`python merge.py`. The sample produces four input rows, one duplicate removed,
+and three exported rows. The missing-value report shows one missing email and
+one missing city.
+
 ## 🛠️ Built with
 
 - **Python** — processing logic and automation.
@@ -189,7 +194,7 @@ missing value normalization, missing value reports, and CSV export.
 - [x] Add automated tests for cleaning, duplicates, missing values, and export
 - [x] Validate required columns before cleaning
 - [x] Normalize missing values and report counts by column
-- [ ] Add reusable test datasets
+- [x] Add reusable test datasets
 - [ ] Expand validation for invalid inputs
 - [ ] Support configurable file paths and column mappings
 - [ ] Build a user-friendly command-line interface
